@@ -1,7 +1,4 @@
-from game_machine import GameMachine
-
-
-# from utils.cli import oops
+from Incora_task.game_machine import GameMachine
 
 
 class Casino:

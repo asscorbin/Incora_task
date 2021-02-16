@@ -1,6 +1,6 @@
-from casino import Casino
-from game_machine import print_all_available_game_mashine, delete_game_machine
-from utils.cli import CLI
+from Incora_task.casino import Casino
+from Incora_task.game_machine import print_all_available_game_mashine, delete_game_machine
+from Incora_task.utils.cli import CLI
 
 
 class User:
