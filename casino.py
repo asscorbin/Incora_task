@@ -49,6 +49,7 @@ class Casino:
                     return game_machine.spin(money)
                 else:
                     return 0
+                    print("тут провтик")
 
             print(config.empty_enough_money_at_game_machine)
             return 0

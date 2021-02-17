@@ -29,7 +29,7 @@ class User:
         self.print_balance()
         money = int(input(config.choose_money_for_spin))
 
-        if self.check_enough_money(money):
+        if not self.check_enough_money(money):
             print(config.user_has_not_enough_amount)
             return
 
@@ -49,7 +49,7 @@ class User:
         return self.money
 
     def check_enough_money(self, money):
-        return money >= self.money
+        return self.money >= money
 
     def print_balance(self):
         money = self.get_money()
@@ -78,8 +78,8 @@ class SuperAdmin(User):
         self.print_balance()
         money = int(input(config.choose_amount_money_for_add__machine))
 
-        if self.check_enough_money(money):
-            print(config.game_machines_have_not_enough_money)
+        if not self.check_enough_money(money):
+            print(config.user_has_not_enough_amount)
             return
 
         GameMachine.add_game_machine(self, casino_number, money)
@@ -140,7 +140,7 @@ class SuperAdmin(User):
         self.print_balance()
         money = int(input(config.enter_necessary_amount))
 
-        if self.check_enough_money(money):
+        if not self.check_enough_money(money):
             print(config.user_has_not_enough_amount)
             return
 

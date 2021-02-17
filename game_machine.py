@@ -52,10 +52,7 @@ class GameMachine:
         return 0
 
     def check_enough_money(self, money):
-        if self.money >= int(money) * 3:
-            return True
-        else:
-            return False
+        return self.money >= int(money) * 3
 
     @classmethod
     def print_all_available_game_machine(cls):
