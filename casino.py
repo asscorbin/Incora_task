@@ -1,4 +1,4 @@
-from Incora_task.game_machine import GameMachine
+from utils import config
 
 
 class Casino:
@@ -11,8 +11,7 @@ class Casino:
 
     # - геттер getMoney - отримати загальну суму грошей у Casino
     def get_total_money(self):
-        total = sum([int(machine.money) for machine in self.game_machines])
-        return total
+        return sum([int(machine.money) for machine in self.game_machines])
 
     # - геттер getMachineCount - отримати кількість автоматів у Casino
     def get_machine_count(self):
@@ -31,9 +30,15 @@ class Casino:
             for i in range(remainder):
                 self.game_machines[i].money += 1
 
-    def is_empty(self):
+    def is_empty_game_machine(self):
         return len(self.game_machines) == 0
 
+    # створювати нове Казино
+    @classmethod
+    def create_new_casino(cls):
+        name = str(input(config.enter_name_casino))
+        new_object = Casino(name)
+        cls.all_casino.append(new_object)
 
     @staticmethod
     def selection_game_mashine(user, casino_number, money):
@@ -45,76 +50,62 @@ class Casino:
                 else:
                     return 0
 
-            print("!!! Автомат для роботи з такою сумою відсутній !!!"
-                  "\n зверніться до адміністратора щоб він поповнив їх або ж спробуйте зіграти в іншому казино")
-        # else:
-        #     oops()
-
-    @staticmethod
-    def add_game_machine_to_casino(user, casino_number, money):
-        if casino_number in range(len(Casino.all_casino)):
-            user.reduce_money(money)
-            new_game_machine = GameMachine(money)
-            Casino.all_casino[casino_number].game_machines.append(new_game_machine)
-        # else:
-        #     oops()
+            print(config.empty_enough_money_at_game_machine)
+            return 0
 
     @staticmethod
     def get_money_casino(casino_number, required_money):
         money_from_casino = 0
-        if Casino.all_casino[casino_number] in Casino.all_casino:
-            print("Казино типу вибрали")
-            if required_money <= Casino.all_casino[casino_number].get_total_money():
-                print("Грошей хватає")
 
-                game_machines = Casino.all_casino[casino_number].game_machines
+        game_machines = Casino.all_casino[casino_number].game_machines
+        sorted_game_machines = sorted(game_machines, key=lambda machine: machine.money, reverse=True)
 
-                sorted_game_machines = sorted(game_machines, key=lambda machine: machine.money, reverse=True)
+        for game_machine in sorted_game_machines:
 
-                print("Виводимо 1 раз усі автомати")
-                for i in sorted_game_machines:
-                    print(i.money)
+            if money_from_casino + game_machine.money > required_money:
 
-                for game_mashine in sorted_game_machines:
-                    print("Проходимось по автоматах")
+                fraction = required_money - (money_from_casino + game_machine.money)
+                money_from_casino = game_machine.money - fraction
+                game_machine.money = -fraction
+                return money_from_casino
+            elif money_from_casino + game_machine.money == required_money:
 
-                    if money_from_casino + game_mashine.money > required_money:
-                        print("це щяс ми на кінцевому")
-                        print(required_money, "- (", money_from_casino, "+", game_mashine.money, ")")
-                        fraction = required_money - (money_from_casino + game_mashine.money)
-                        print("Остача", fraction)
-                        print(money_from_casino, "=", game_mashine.money, "-", fraction)
-                        money_from_casino = game_mashine.money - fraction
-                        print("money_from_casino", money_from_casino)
-                        game_mashine.money = -fraction
-                        print("game_mashine.money", game_mashine.money)
+                money_from_casino = game_machine.money
+                if game_machine in Casino.all_casino[casino_number].game_machines:
+                    Casino.all_casino[casino_number].game_machines.remove(game_machine)
+                return money_from_casino
 
-                        for i in sorted_game_machines:
-                            print(i.money)
+            money_from_casino += game_machine.money
+            game_machine.money = 0
+            if game_machine in Casino.all_casino[casino_number].game_machines:
+                Casino.all_casino[casino_number].game_machines.remove(game_machine)
 
-                        return money_from_casino
-                    elif money_from_casino + game_mashine.money == required_money:
-                        print("Воно в притик")
-                        money_from_casino = game_mashine.money
-                        if game_mashine in Casino.all_casino[casino_number].game_machines:
-                            Casino.all_casino[casino_number].game_machines.remove(game_mashine)
+    @classmethod
+    def print_available_casino(cls):
+        print(config.list_of_available_casino)
 
-                            for i in sorted_game_machines:
-                                print(i.money)
+        for i in range(len(cls.all_casino)):
+            print(f' * {i + 1} \t\t {cls.all_casino[i].name_casino}')
 
-                        return money_from_casino
+    @classmethod
+    def is_empty_casino(cls):
+        return not cls.all_casino
 
-                    print("Добавили бабки")
-                    money_from_casino += game_mashine.money
-                    game_mashine.money = 0
-                    if game_mashine in Casino.all_casino[casino_number].game_machines:
-                        Casino.all_casino[casino_number].game_machines.remove(game_mashine)
-            else:
-                print("в казино недостатьо коштів")
+    @classmethod
+    def check_available_casino(cls, number):
+        return not cls.all_casino[number] in cls.all_casino
 
     @staticmethod
-    def print_available_casino():
-        print("Список доступних казино:")
+    def get_number_casino_from_game_machine(number):
+        counter = 0
+        num_casino = 0
+        for casino in Casino.all_casino:
+            for game_machine in casino.game_machines:
+                if counter == number:
+                    return num_casino
+                counter += 1
+            num_casino += 1
 
-        for i in range(len(Casino.all_casino)):
-            print(f' * {i + 1} \t\t {Casino.all_casino[i].name_casino}')
+    @classmethod
+    def is_empty_game_machine_in_casino(cls, num_casino):
+        return Casino.all_casino[num_casino].game_machines == 0

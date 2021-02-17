@@ -1,7 +1,7 @@
+from casino import Casino
 from utils import config
 
 
-# CLI --> Command Line Interface
 class CLI:
     work = True
 
@@ -10,31 +10,29 @@ class CLI:
         self.user = user
 
         self.using = True
+        self.is_admin = True
 
         self.menu_user = {"1": user.start_game}
 
-        self.menu_admin = {"1": self.admin.create_new_casino,
+        self.menu_admin = {"1": Casino.create_new_casino,
                            "2": self.admin.create_new_game_machine,
                            "3": self.admin.get_money_from_casino,
                            "4": self.admin.add_money_to_machine,
                            "5": self.admin.delete_game_machine}
 
     def start(self):
-        print("\n\t____ Вітаю Вас в казино ____"
-              "\n\t**** Оберіть тип користувача ****            (для звершення роботи використовуйте '@'")
-
-        self.type_user = int(input("\t0 - Користувач \n\t1 - Власник\n Зробіть свій вибір: "))
+        print(config.entering)
 
         while self.work:
             self.using = True
 
-            if self.type_user == 0:
+            if not self.is_admin:
 
                 while self.using:
                     action = str(input(config.menu_user_text))
                     self.do_action(action, self.menu_user)
 
-            elif self.type_user == 1:
+            elif self.is_admin:
 
                 while self.using:
                     action = str(input(config.menu_admin_text))
@@ -45,13 +43,15 @@ class CLI:
     def do_action(self, action, menu):
         if action in menu.keys():
             menu[action]()
+
         elif action == "q":
-            print("Міняємо користувача")
             self.using = False
-            self.type_user += 1
-            self.type_user %= 2
+            self.is_admin = not self.is_admin
+
         elif action == "@":
+            self.using = False
             self.work = False
+
         else:
             oops()
 
