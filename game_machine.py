@@ -36,17 +36,15 @@ class GameMachine:
         generated_number = str(random.randint(0, 999)).rjust(3, '0')
         print(generated_number)
 
+        # Якщо 3 цифри однакові - повертається 3-кратна сума
+        if generated_number.count(i) == 3:
+            print(f"{config.win_x3} {generated_number}")
+            return money * 3
+
         for i in generated_number:
-            # Якщо у числі 2 цифри однакові, повертається сума у 2 рази більша ніж прийшла в аргументі (і віднімається
-            # від суми грошей в автоматі)
             if generated_number.count(i) == 2:
                 print(f"{config.win_x2} {generated_number}")
                 return money * 2
-
-            # Якщо 3 цифри однакові - повертається 3-кратна сума
-            elif generated_number.count(i) == 3:
-                print(f"{config.win_x3} {generated_number}")
-                return money * 3
 
         print(f"{config.lose} {generated_number}")
         return 0
