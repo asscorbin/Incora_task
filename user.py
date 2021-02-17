@@ -161,9 +161,9 @@ class SuperAdmin(User):
             print(config.empty_name_game_machine)
             return
 
+        num_casino = Casino.get_number_casino_from_game_machine(num_game_machine)
         money, casino = GameMachine.delete_game_machine(num_game_machine)
 
-        num_casino = Casino.get_number_casino_from_game_machine(num_game_machine)
         if Casino.is_empty_game_machine_in_casino(num_casino):
             self.top_up_money(money)
             Casino.all_casino.pop(num_casino)

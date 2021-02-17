@@ -98,14 +98,12 @@ class Casino:
     @staticmethod
     def get_number_casino_from_game_machine(number):
         counter = 0
-        num_casino = 0
-        for casino in Casino.all_casino:
+        for casino_id, casino in enumerate(Casino.all_casino):
             for game_machine in casino.game_machines:
                 if counter == number:
-                    return num_casino
+                    return casino_id
                 counter += 1
-            num_casino += 1
 
     @classmethod
     def is_empty_game_machine_in_casino(cls, num_casino):
-        return Casino.all_casino[num_casino].game_machines == 0
+        return not Casino.all_casino[num_casino].game_machines
