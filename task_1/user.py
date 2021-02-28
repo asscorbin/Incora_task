@@ -1,7 +1,7 @@
-from casino import Casino
-from game_machine import GameMachine
-from utils import config
-from utils.cli import CLI
+from task_1.casino import Casino
+from task_1.game_machine import GameMachine
+from task_1.utils import config
+from task_1.utils.cli import CLI
 
 
 class User:

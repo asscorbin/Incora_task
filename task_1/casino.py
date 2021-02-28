@@ -1,4 +1,4 @@
-from utils import config
+from task_1.utils import config
 
 
 class Casino:

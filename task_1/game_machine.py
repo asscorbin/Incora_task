@@ -1,7 +1,7 @@
 import random
 
-from casino import Casino
-from utils import config
+from task_1.casino import Casino
+from task_1.utils import config
 
 
 class GameMachine:
