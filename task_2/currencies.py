@@ -1,6 +1,3 @@
-import config
-
-
 class Ccy:
     currency_market = {"UAH": {"USD": 0.036, "EUR": 0.030},
                        "USD": {"UAH": 27.95, "EUR": 0.83},
