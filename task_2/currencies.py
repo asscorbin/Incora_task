@@ -2,6 +2,9 @@ general_currency = "UAH"
 
 
 class Ccy:
+    _calc = {"+": lambda a, b: a + b,
+             "-": lambda a, b: a - b}
+
     currency_market = {"UAH": {"USD": 0.036, "EUR": 0.030},
                        "USD": {"UAH": 27.95, "EUR": 0.83},
                        "EUR": {"UAH": 33.74, "USD": 1.21}}
@@ -21,7 +24,6 @@ class Ccy:
             return 2
         elif first == second:
             return 0
-
 
     def compare_currency(self, other):
         comparison_result = Ccy.comparison(Ccy.exchange(self),
@@ -59,13 +61,13 @@ class Ccy:
             comparison_currency = self.compare_currency(other)
 
             if comparison_currency == self.currency:
-                amount = eval(
-                    f"self.amount {sign} Ccy.exchange(other, self.currency)")
+                amount = self._calc[sign](self.amount,
+                                          Ccy.exchange(other, self.currency))
                 return f"{self.currency}, {amount}"
 
             elif comparison_currency == other.currency:
-                amount = eval(
-                    f"Ccy.exchange(self, other.currency) {sign} other.amount")
+                amount = self._calc[sign](Ccy.exchange(self, other.currency),
+                                          other.amount)
                 return f"{other.currency}, {amount}"
 
     def __add__(self, other):
