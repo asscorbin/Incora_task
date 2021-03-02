@@ -1,4 +1,4 @@
-from currencies import Ccy
+from task_2.currencies import Ccy
 
 uah = Ccy(100, "UAH")
 usd = Ccy(100, "USD")

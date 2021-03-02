@@ -28,7 +28,6 @@ class Ccy:
     def compare_currency(self, other):
         comparison_result = Ccy.comparison(Ccy.exchange(self),
                                            Ccy.exchange(other))
-
         if comparison_result == 1:
             return self.currency
         elif comparison_result == 2:
@@ -53,6 +52,23 @@ class Ccy:
             return obj.amount * cls.currency_market[obj.currency][
                 expected_currency]
 
+    # def operations_with_object(self, other, sign):
+    #     if self.currency == other.currency:
+    #         return f"{self.currency},{self.amount + other.amount}"
+    #
+    #     else:
+    #         comparison_currency = self.compare_currency(other)
+    #
+    #         if comparison_currency == self.currency:
+    #             amount = self._calc[sign](self.amount,
+    #                                       Ccy.exchange(other, self.currency))
+    #             return f"{self.currency}, {amount}"
+    #
+    #         elif comparison_currency == other.currency:
+    #             amount = self._calc[sign](Ccy.exchange(self, other.currency),
+    #                                       other.amount)
+    #             return f"{other.currency}, {amount}"
+
     def operations_with_object(self, other, sign):
         if self.currency == other.currency:
             return f"{self.currency},{self.amount + other.amount}"
@@ -61,14 +77,14 @@ class Ccy:
             comparison_currency = self.compare_currency(other)
 
             if comparison_currency == self.currency:
-                amount = self._calc[sign](self.amount,
-                                          Ccy.exchange(other, self.currency))
-                return f"{self.currency}, {amount}"
+                tuple_ = (self.amount, Ccy.exchange(other, self.currency),
+                          self.currency)
+            else:
+                tuple_ = (Ccy.exchange(self, other.currency), other.amount,
+                          other.currency)
 
-            elif comparison_currency == other.currency:
-                amount = self._calc[sign](Ccy.exchange(self, other.currency),
-                                          other.amount)
-                return f"{other.currency}, {amount}"
+            amount = self._calc[sign](tuple_[0], tuple_[1])
+            return f"{tuple_[2]}, {amount}"
 
     def __add__(self, other):
         if type(self) == type(other):
