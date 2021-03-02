@@ -1,3 +1,5 @@
+from task_2.data import get_currency_coefficient
+
 general_currency = "UAH"
 
 
@@ -44,13 +46,14 @@ class Ccy:
             print("Одинакові значення та валюти")
             return self.currency
 
-    @classmethod
-    def exchange(cls, obj, expected_currency=general_currency):
+    @staticmethod
+    def exchange(obj, expected_currency=general_currency):
         if obj.currency == expected_currency:
             return obj.amount
         else:
-            return obj.amount * cls.currency_market[obj.currency][
-                expected_currency]
+            coefficient = get_currency_coefficient(obj.currency,
+                                                   expected_currency)
+            return obj.amount * coefficient
 
     # def operations_with_object(self, other, sign):
     #     if self.currency == other.currency:
