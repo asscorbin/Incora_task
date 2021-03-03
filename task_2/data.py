@@ -33,13 +33,13 @@ class Currency:
                 self.data["USD"]["UAH"] = index[config.rateBuy]
                 self.data["UAH"]["USD"] = round(1 / index[config.rateSell],
                                                 config.round_coefficient)
-            elif index[config.CCA] == config.EUR and index[
-                config.CCB] == config.USD:
+            elif index[config.CCA] == config.EUR and \
+                    index[config.CCB] == config.USD:
 
                 self.data["EUR"]["USD"] = index[config.rateBuy]
                 self.data["USD"]["EUR"] = index[config.rateSell]
-            elif index[config.CCA] == config.EUR and index[
-                config.CCB] == config.UAH:
+            elif index[config.CCA] == config.EUR and \
+                    index[config.CCB] == config.UAH:
 
                 self.data["EUR"]["UAH"] = index[config.rateBuy]
                 self.data["UAH"]["EUR"] = round(1 / index[config.rateSell],

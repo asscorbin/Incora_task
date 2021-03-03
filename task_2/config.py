@@ -11,3 +11,5 @@ CCB = "currencyCodeB"
 
 rateBuy = "rateBuy"
 rateSell = "rateSell"
+
+subtraction_error = "Ви не можете відняти від меншого більше число"

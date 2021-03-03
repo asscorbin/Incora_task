@@ -1,8 +1,7 @@
 from task_2.data import *
+from functools import total_ordering
 
-general_currency = "UAH"
-
-
+@total_ordering
 class Ccy:
     currency_market = Currency()
 
@@ -44,7 +43,7 @@ class Ccy:
             return self.currency
 
     @classmethod
-    def exchange(cls, obj, expected_currency=general_currency):
+    def exchange(cls, obj, expected_currency=config.currency_for_compare):
         if obj.currency == expected_currency:
             return obj.amount
         else:
@@ -99,20 +98,39 @@ class Ccy:
         else:
             return f"{self.currency}, {self.amount + other}"
 
-    def check_sub_available(self):
-        pass
+    @staticmethod
+    def check_sub_object_available(decreasing, subtractor):
+        comparison_result = Ccy.comparison(Ccy.exchange(decreasing),
+                                           Ccy.exchange(subtractor))
+
+        return_ = True if comparison_result == 0 or comparison_result == 1 \
+            else False
+
+        return return_
+
+    @staticmethod
+    def check_sub_number_available(decreasing, subtractor):
+        return 0 <= (decreasing - subtractor)
 
     def __sub__(self, other):
         if type(self) == type(other):
-            return self.operations_with_object(other, "-")
+            if Ccy.check_sub_object_available(self, other):
+                return self.operations_with_object(other, "-")
         else:
-            return f"{self.currency}, {self.amount - other}"
+            if Ccy.check_sub_number_available(self.amount, other):
+                return f"{self.currency}, {self.amount - other}"
+
+        return config.subtraction_error
 
     def __rsub__(self, other):
         if type(self) == type(other):
-            return self.operations_with_object(other, "-")
+            if Ccy.check_sub_object_available(other, self):
+                return self.operations_with_object(other, "-")
         else:
-            return f"{self.currency}, {self.amount - other}"
+            if Ccy.check_sub_number_available(other, self.amount):
+                return f"{self.currency}, {self.amount - other}"
+
+        print(config.subtraction_error)
 
     # def __mul__(self, other):
     #     if type(self) == type(other):
@@ -139,7 +157,13 @@ class Ccy:
     #         return f"{self.currency}, {self.amount / other}"
 
     def __eq__(self, other):
-        self.compare_currency(other)
+        if other is type(self):
+            return Ccy.exchange(self) == Ccy.exchange(other)
+        else:
+            return Ccy.exchange(self) == other
 
     def __gt__(self, other):
-        pass
+        if isinstance(other, type(self)):
+            return Ccy.exchange(self) > Ccy.exchange(other)
+        else:
+            return Ccy.exchange(self) > other
