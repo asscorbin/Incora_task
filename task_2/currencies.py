@@ -1,12 +1,15 @@
 from task_2.data import *
 from functools import total_ordering
 
+
 @total_ordering
 class Ccy:
     currency_market = Currency()
 
     _calc = {"+": lambda a, b: a + b,
-             "-": lambda a, b: a - b}
+             "-": lambda a, b: a - b,
+             "*": lambda a, b: a * b,
+             "/": lambda a, b: a / b}
 
     def __init__(self, amount, currency):
         self.amount = amount
@@ -51,23 +54,6 @@ class Ccy:
                 obj.currency,
                 expected_currency)
             return obj.amount * coefficient
-
-    # def operations_with_object(self, other, sign):
-    #     if self.currency == other.currency:
-    #         return f"{self.currency},{self.amount + other.amount}"
-    #
-    #     else:
-    #         comparison_currency = self.compare_currency(other)
-    #
-    #         if comparison_currency == self.currency:
-    #             amount = self._calc[sign](self.amount,
-    #                                       Ccy.exchange(other, self.currency))
-    #             return f"{self.currency}, {amount}"
-    #
-    #         elif comparison_currency == other.currency:
-    #             amount = self._calc[sign](Ccy.exchange(self, other.currency),
-    #                                       other.amount)
-    #             return f"{other.currency}, {amount}"
 
     def operations_with_object(self, other, sign):
         if self.currency == other.currency:
@@ -132,29 +118,47 @@ class Ccy:
 
         print(config.subtraction_error)
 
-    # def __mul__(self, other):
-    #     if type(self) == type(other):
-    #         return self.operations_with_object(other, "*")
-    #     else:
-    #         return f"{self.currency}, {self.amount * other}"
-    #
-    # def __rmul__(self, other):
-    #     if type(self) == type(other):
-    #         return self.operations_with_object(other, "*")
-    #     else:
-    #         return f"{self.currency}, {self.amount * other}"
-    #
-    # def __truediv__(self, other):
-    #     if type(self) == type(other):
-    #         return self.operations_with_object(other, "/")
-    #     else:
-    #         return f"{self.currency}, {self.amount / other}"
-    #
-    # def __rtruediv__(self, other):
-    #     if type(self) == type(other):
-    #         return self.operations_with_object(other, "/")
-    #     else:
-    #         return f"{self.currency}, {self.amount / other}"
+    def __mul__(self, other):
+        if type(self) == type(other):
+            return self.operations_with_object(other, "*")
+        else:
+            return f"{self.currency}, {self.amount * other}"
+
+    def __rmul__(self, other):
+        if type(self) == type(other):
+            return self.operations_with_object(other, "*")
+        else:
+            return f"{self.currency}, {self.amount * other}"
+
+    @staticmethod
+    def check_truediv_object_available(decreasing, subtractor):
+        if subtractor == 0:
+            return False
+        comparison_result = Ccy.comparison(Ccy.exchange(decreasing),
+                                           Ccy.exchange(subtractor))
+
+        return_ = True if comparison_result == 0 or comparison_result == 1 \
+            else False
+
+        return return_
+
+    @staticmethod
+    def check_truediv_number_available(decreasing, subtractor):
+        if subtractor == 0:
+            return False
+        return 0 <= (decreasing / subtractor)
+
+    def __truediv__(self, other):
+        if type(self) == type(other):
+            return self.operations_with_object(other, "/")
+        else:
+            return f"{self.currency}, {self.amount / other}"
+
+    def __rtruediv__(self, other):
+        if type(self) == type(other):
+            return self.operations_with_object(other, "/")
+        else:
+            return f"{self.currency}, {self.amount / other}"
 
     def __eq__(self, other):
         if other is type(self):
